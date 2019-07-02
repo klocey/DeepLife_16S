@@ -2,7 +2,7 @@
 python code for analyzing diversity within the Census of Deep Life (CoDL) 16S rRNA amplicon dataset
 
 ## Authors
-Kenneth J. Locey, Diné College
+Kenneth J. Locey, Associate Professor, Diné College
 
 ## Files
 **radMetrics.py**: Reads .biom files and generates an output file of the following metrics for each sample:
@@ -39,4 +39,9 @@ Kenneth J. Locey, Diné College
 	* Margalef's index
 	* Menhinick's index
 
-**
+**metrics.py**: A module called by radMetrics.py. Contains functions for the above metrics.
+
+## Directories
+**data**: Holds data files that are to be processed.  
+**diversity_data**: Holds output from radMetrics.py  
+**DiversityTools**: Holds files and other directories for conducting macroecological analyses, fitting abundance models, and converting data matrices
