@@ -44,12 +44,23 @@ def p_ZPtOne(sad):
     return numR/S
 
 
+def logmodskew(sad):
+    S = len(sad)
+    if S <= 2.0:
+        return 'NaN'
+    
+    skew = stats.skew(sad)
+    lms = np.log10(np.abs(float(skew)) + 1)
+    if skew < 0: lms = lms * -1
+    
+    return lms
+    
+    
 def Rlogskew(sad):
     S = len(sad)
 
     if S <= 2.0:
-        print 'S < 2, cannot compute log-skew'
-        sys.exit()
+        return 'NaN'
 
     sad = np.log10(sad)
     mu = np.mean(sad)

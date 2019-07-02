@@ -5,9 +5,13 @@ import sys
 from scipy import spatial, stats
 from biom import load_table
 
+#file_name = 'GPC_OTU_Table_97sim.biom'
+file_name = 'emp_deblur_100bp.release1.biom'
+#file_name = 'Global.Global2000Subset.Bacteria.EMP.biom'
+
 
 mydir = expanduser("~/GitHub/DeepLife_16S")
-path = mydir + '/data/Global.Global2000Subset.Bacteria.EMP.biom'
+path = mydir + '/data/'+file_name
 
 import metrics
 
@@ -27,7 +31,9 @@ for i in ids1:
         continue
     
     
-OUT = open(mydir + '/diversity_data/Sample_Div_Measures.txt','w+')
+OUT = open(mydir + '/diversity_data/GPC_OTU_Table_97sim_Sample_Div_Measures.txt','w+')
+
+print>>OUT, 'name N S Var Evar ESimp EQ O ENee EPielou EHeip BP SimpDom Nmax McN skew logmodskew chao1 ace jknife1 jknife2 margalef menhinick preston_a preston_S'
 
 ct = 0
 numRADs = len(sads)
@@ -64,8 +70,9 @@ for ind, sad in enumerate(sads):
     McN = metrics.McNaughton(RAD)
 
     # Rarity
-    skew = stats.skew(RAD)
-    logskew = metrics.Rlogskew(RAD)
+    
+    logmodskew = metrics.logmodskew(RAD)
+    skew = stats.skew(sad)
     #p_ones = metrics.r_singletons(RAD)
     #p_zpt1 = metrics.p_ZPtOne(RAD)
 
@@ -80,8 +87,8 @@ for ind, sad in enumerate(sads):
 
     ct+=1
 
-    print>>OUT, name, N, S, Var, Evar, ESimp, EQ, O, ENee, EPielou, EHeip, BP, SimpDom, Nmax, McN, skew, logskew, chao1, ace, jknife1, jknife2, margalef, menhinick, preston_a, preston_S
-    #print name, kind, N, S, Evar, ESimp, EQ, O, ENee, EPielou, EHeip, BP, SimpDom, Nmax, McN, skew, logskew, chao1, ace, jknife1, jknife2, margalef, menhinick, preston_a, preston_S
+    print>>OUT, name, N, S, Var, Evar, ESimp, EQ, O, ENee, EPielou, EHeip, BP, SimpDom, Nmax, McN, skew, logmodskew, chao1, ace, jknife1, jknife2, margalef, menhinick, preston_a, preston_S
+    
 
     print numRADs - ct
     
