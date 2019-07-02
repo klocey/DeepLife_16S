@@ -1,45 +1,56 @@
 from __future__ import division
-import sys
-import os
-import random
 import numpy as np
-from scipy import stats
+from os.path import expanduser
+import sys
+from scipy import spatial, stats
+from biom import load_table
 
 
-mydir = os.path.expanduser("~/GitHub")
+mydir = expanduser("~/GitHub/DeepLife_16S")
+path = mydir + '/data/Global.Global2000Subset.Bacteria.EMP.biom'
 
-sys.path.append(mydir + "/tools/metrics")
 import metrics
-sys.path.append(mydir + "/tools/getRADs")
-import getRADs
 
 
-OUT = open(mydir + '/MicrobialScaling2/data/Louca/Louca-SADMetricData.txt','w+')
-RADs = []
+dat = load_table(path) 
+ids1 = dat.ids().tolist()
 
-name = 'Louca'
-RADs = getRADs.EMP_SADs(mydir +'/MicrobialScaling2/data/Louca', name)
 
-print len(RADs), 'RADs'
+sads = []
+ids = []
+for i in ids1:
+    try:
+        sad = dat.data(i)
+        sads.append(sad)
+        ids.append(i)
+    except:
+        continue
+    
+    
+OUT = open(mydir + '/diversity_data/Sample_Div_Measures.txt','w+')
 
 ct = 0
-numRADs = len(RADs)
-for RAD in RADs:
+numRADs = len(sads)
+for ind, sad in enumerate(sads):
 
-    RAD = list([x for x in RAD if x > 0])
+    name = ids[ind]
+    RAD = list([x for x in sad if x > 0])
+    RAD = [int(i) for i in RAD]
+    RAD.sort(reverse=True)
 
     N = sum(RAD)
     S = len(RAD)
 
-    if S < 2: continue
+    if S < 5: continue
     if max(RAD) == min(RAD): continue
 
-    # Evenness
+    # Evenness/Unevenness
     Var = np.var(RAD, ddof = 1)
     Evar = metrics.e_var(RAD)
     ESimp = metrics.e_simpson(RAD)
     EQ = metrics.EQ(RAD)
     O = metrics.OE(RAD)
+    
     #Camargo = 0.0 # metrics.camargo(RAD)   # Takes too long
     ENee = metrics.NHC(RAD)
     EPielou = metrics.e_pielou(RAD)
@@ -69,9 +80,9 @@ for RAD in RADs:
 
     ct+=1
 
-    kind = 'micro'
-    print>>OUT, name, kind, N, S, Var, Evar, ESimp, EQ, O, ENee, EPielou, EHeip, BP, SimpDom, Nmax, McN, skew, logskew, chao1, ace, jknife1, jknife2, margalef, menhinick, preston_a, preston_S
+    print>>OUT, name, N, S, Var, Evar, ESimp, EQ, O, ENee, EPielou, EHeip, BP, SimpDom, Nmax, McN, skew, logskew, chao1, ace, jknife1, jknife2, margalef, menhinick, preston_a, preston_S
     #print name, kind, N, S, Evar, ESimp, EQ, O, ENee, EPielou, EHeip, BP, SimpDom, Nmax, McN, skew, logskew, chao1, ace, jknife1, jknife2, margalef, menhinick, preston_a, preston_S
 
-    print name, numRADs - ct
+    print numRADs - ct
+    
 OUT.close()

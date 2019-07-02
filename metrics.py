@@ -3,22 +3,16 @@ import sys
 import numpy as np
 from scipy import stats
 from scipy.stats import gaussian_kde
-import mpmath as mpm
+#import mpmath as mpm
 from scipy.optimize import fsolve
-import re
-import random
-import os
 import math
 
-from numpy import log, log2, exp, sqrt,log10
+from numpy import log, log2, exp, sqrt #, log10
 from scipy.optimize import fsolve
 import scipy.optimize as opt
 from scipy.special import erf
 pi = math.pi
 
-
-mydir = os.path.expanduser("~/GitHub/rare-bio")
-data = os.path.expanduser("~/data")
 
 ################################################################################
 #### Section of evenness indices and descriptive statistical functions #########
@@ -89,8 +83,10 @@ def Preston(sad):
 
     guess = 0.2
     a = opt.fsolve(alpha2, guess, (N, Nmax, Nmin))[0]
+    
     S = sqrt(pi)/a * exp( (a * log2(sqrt(Nmax/Nmin)))**2) # Using equation 10
-    return S
+    
+    return a, S
 
 
 ############### DOMINANCE ######################################################
