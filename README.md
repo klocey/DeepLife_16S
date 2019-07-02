@@ -38,3 +38,5 @@ Kenneth J. Locey, Diné College
 	* Jackknife2
 	* Margalef's index
 	* Menhinick's index
+
+**
